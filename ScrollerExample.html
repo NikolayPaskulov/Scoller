@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <title>Scroller Example</title>
+    <script src="Scroller.js"></script>
+    <style>
+        table {
+            position: relative;
+            width: 500px;
+            border: 1px solid #bbbbbb;
+            border-collapse: collapse;
+        }
+    </style>
+</head>
+<body>
+    <table>
+        <thead>
+            <tr>
+                <td>First Name</td>
+                <td>Last Name</td>
+                <td>Full Name</td>
+            </tr>
+        </thead>
+        <tbody></tbody>
+    </table>
+
+
+
+    <script>
+        var firstNames = [
+            "Noah", "Liam", "Mason", "Jacob", "William", "Ethan",
+            "Michael", "Alexander", "James", "Daniel", "Elijah", "Benjamin",
+            "Logan", "Aiden", "Jayden", "Matthew", "Jackson", "David", "Lucas",
+            "Joseph", "Anthony", "Andrew", "Samuel", "Gabriel", "Joshua", "John",
+            "Carter", "Luke", "Dylan", "Christopher", "Isaac", "Oliver", "Henry",
+            "Sebastian", "Caleb", "Owen", "Ryan", "Nathan", "Wyatt", "Hunter", "Jack",
+            "Christian", "Landon", "Jonathan", "Levi", "Jaxon", "Julian", "Isaiah", "Eli",
+            "Aaron", "Charles", "Connor", "Cameron", "Thomas", "Jordan", "Jeremiah", "Nicholas",
+            "Evan", "Adrian", "Gavin", "Robert", "Brayden", "Grayson", "Josiah", "Colton", "Austin",
+            "Angel", "Jace", "Dominic", "Kevin", "Brandon", "Tyler", "Parker", "Ayden", "Jason", "Jose",
+            "Ian", "Chase", "Adam", "Hudson", "Nolan", "Zachary", "Easton", "Blake", "Jaxson", "Cooper",
+            "Lincoln", "Xavier", "Bentley", "Kayden", "Carson", "Brody", "Asher", "Nathaniel", "Ryder",
+            "Justin", "Leo", "Juan", "Luis", "Camden", "Tristan"
+        ];
+
+        var lastNames = ["SMITH", "JOHNSON", "WILLIAMS", "BROWN", "JONES", "MILLER", "DAVIS", "GARCIA",
+            "RODRIGUEZ", "WILSON", "MARTINEZ", "ANDERSON", "TAYLOR", "THOMAS", "HERNANDEZ", "MOORE",
+            "MARTIN", "JACKSON", "THOMPSON", "WHITE", "LOPEZ", "LEE", "GONZALEZ", "HARRIS", "CLARK",
+            "LEWIS", "ROBINSON", "WALKER", "PEREZ", "HALL", "YOUNG", "ALLEN", "SANCHEZ", "WRIGHT",
+            "KING", "SCOTT", "GREEN", "BAKER", "ADAMS", "NELSON", "HILL", "RAMIREZ", "CAMPBELL",
+            "MITCHELL", "ROBERTS", "CARTER", "PHILLIPS", "EVANS", "TURNER", "TORRES", "PARKER", "COLLINS",
+            "EDWARDS", "STEWART", "FLORES", "MORRIS", "NGUYEN", "MURPHY", "RIVERA", "COOK", "ROGERS", "MORGAN",
+            "PETERSON", "COOPER", "REED", "BAILEY", "BELL", "GOMEZ", "KELLY", "HOWARD", "WARD", "COX", "DIAZ",
+            "RICHARDSON", "WOOD", "WATSON", "BROOKS", "BENNETT", "GRAY", "JAMES", "REYES", "CRUZ", "HUGHES",
+            "PRICE", "MYERS", "LONG", "FOSTER", "SANDERS", "ROSS", "MORALES", "POWELL", "SULLIVAN", "RUSSELL",
+            "ORTIZ", "JENKINS", "GUTIERREZ", "PERRY", "BUTLER", "BARNES", "FISHER"];
+
+
+        var tableBody = document.querySelector('body > table > tbody');
+
+        /*                             INIT RANDOM DATA                                     */
+        var len = 100000;
+        var data = [];
+
+        for (var i = 0; i < len; i++) {
+            var randomFirstName = firstNames[Math.floor(Math.random() * firstNames.length)];
+            var randomLastName = lastNames[Math.floor(Math.random() * lastNames.length)];
+            var fullName = randomFirstName + ' ' + randomLastName;
+            var person = {
+                firstName: randomFirstName,
+                lastName: randomLastName,
+                fullName: fullName
+            }
+            data.push(person);
+        }
+
+        // INIT TABLE
+        buildBody(data, 0, 10);
+
+
+        // INIT SCROLLER
+        var scroller = new Scroller({
+            numberOfAllElements: data.length,
+            scrollBy: 10,
+            heightPerElement: 20,
+            appendConteiner: document.querySelector('table'),
+            width: '20px',
+            scrollConteiner: tableBody,
+            callback: scrollerCallback,
+            styles: { scrollHolder: { position: 'absolute', right: '-20px', top: '20px' } }
+        }).append();
+
+        function scrollerCallback(positions) {
+            buildBody(data, positions.startAt, positions.endAt);
+        }
+
+        function buildBody(arr, start, end) {
+            var frag = document.createDocumentFragment();
+
+            for (var i = start; i < end; i++) {
+                var tr = document.createElement('tr');
+                var firstNameTd = document.createElement('td');
+                var lastNameTd = document.createElement('td');
+                var fullNameTd = document.createElement('td');
+
+                firstNameTd.innerText = arr[i].firstName;
+                lastNameTd.innerText = arr[i].lastName;
+                fullNameTd.innerText = arr[i].fullName;
+
+                tr.appendChild(firstNameTd);
+                tr.appendChild(lastNameTd);
+                tr.appendChild(fullNameTd);
+
+                frag.appendChild(tr);
+            }
+            tableBody.innerHTML = '';
+            tableBody.appendChild(frag);
+        }
+
+    </script>
+
+
+</body>
+</html>
